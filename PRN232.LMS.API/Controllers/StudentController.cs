@@ -17,7 +17,6 @@ namespace PRN232.LMS.API.Controllers
             try
             {
                 var students = _studentService.GetStudents();
-
                 if (students == null)
                 {
                     return NotFound();
@@ -29,12 +28,11 @@ namespace PRN232.LMS.API.Controllers
                     Message = "Request processed successfully",
                     Data = students,
                     Errors = null
-
                 };
                 return Ok(studentResponse);
 
-
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(new ApiResponse<object>()
                 {
