@@ -22,5 +22,27 @@ namespace PRN232.LMS.Services
 
             return enrollments;
         }
+
+        public async Task<PagedResult<dynamic>> GetEnrollmentsAsync(QueryParameters queryParams)
+        {
+            Expression<Func<Enrollment, bool>>? searchFilter = null;
+            if (!string.IsNullOrWhiteSpace(queryParams.Search))
+            {
+                searchFilter = e => e.Status.Contains(queryParams.Search);
+            }
+
+            var (enrollments, totalCount) = await _enrollmentRepository
+                .GetCollectionAsync(queryParams, searchFilter);
+
+            var shaped = enrollments.ShapeData(queryParams.Fields);
+
+            return new PagedResult<dynamic>
+            {
+                Items = shaped,
+                TotalCount = totalCount,
+                Page = queryParams.Page,
+                Size = queryParams.Size
+            };
+        }
     }
 }

@@ -1,16 +1,17 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PRN232.LMS.API.Models;
 using PRN232.LMS.Services;
+using PRN232.LMS.Services.Common;
 
 namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
-    [Route("api/students")]
-    public class StudentController(IStudentService _studentService) : Controller
+    [Route("api/[controller]s")]
+    public class StudentController(IStudentService _studentService) : ControllerBase
     {
-        [HttpGet]
+        [HttpGet("all")]
         public IActionResult GetStudents()
         {
             try
@@ -22,12 +23,12 @@ namespace PRN232.LMS.API.Controllers
                     return NotFound();
                 }
 
-                var studentResponse = new StudentResponse()
+                var studentResponse = new ApiResponse<object>()
                 {
-                    success = true,
-                    message = "Request processed successfully",
-                    data = students,
-                    errors = null
+                    Success = true,
+                    Message = "Request processed successfully",
+                    Data = students,
+                    Errors = null
 
                 };
                 return Ok(studentResponse);
@@ -35,52 +36,26 @@ namespace PRN232.LMS.API.Controllers
 
             }catch (Exception ex)
             {
-                return BadRequest(new StudentResponse()
+                return BadRequest(new ApiResponse<object>()
                 {
-                    success = false,
-                    message = "An error occurred while processing the request",
-                    data = null,
-                    errors = ex.Message
+                    Success = false,
+                    Message = "An error occurred while processing the request",
+                    Data = null,
+                    Errors = ex.Message
                 });
             }
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetStudentById(int id)
+        [HttpGet]
+        public async Task<IActionResult> GetStudents([FromQuery] QueryParameters queryParams)
         {
-            try
+            var result = await _studentService.GetStudentsAsync(queryParams);
+            return Ok(new ApiResponse<object>
             {
-                var student = _studentService.GetStudentById(id);
-
-                if (student == null)
-                {
-                    return NotFound(new StudentResponse()
-                    {
-                        success = false,
-                        message = $"Student with ID {id} not found",
-                        data = null
-                    });
-                }
-
-                var studentResponse = new StudentResponse()
-                {
-                    success = true,
-                    message = "Request processed successfully",
-                    data = student,
-                    errors = null
-                };
-
-                return Ok(studentResponse);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new StudentResponse()
-                {
-                    success = false,
-                    message = "An error occurred",
-                    errors = ex.Message
-                });
-            }
+                Success = true,
+                Message = "Students retrieved successfully",
+                Data = result
+            });
         }
     }
 }

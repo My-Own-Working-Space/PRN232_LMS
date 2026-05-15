@@ -14,7 +14,7 @@ builder.Services.AddSqlServer<PRN232.LMS.Repositories.LMSDatabaseContext>(connec
 
 builder.Services.AddScoped<PRN232.LMS.Repositories.Interfaces.IStudentRepository, PRN232.LMS.Repositories.StudentRepository>();
 builder.Services.AddScoped<IStudentService, StudentService>();
-
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 var app = builder.Build();
 

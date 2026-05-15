@@ -1,6 +1,10 @@
-﻿using PRN232.LMS.Repositories.Interfaces;
+using PRN232.LMS.Repositories.Interfaces;
 using PRN232.LMS.Repositories.Models;
+using PRN232.LMS.Repositories.Extensions;
+using PRN232.LMS.Services.Common;
+using PRN232.LMS.Services.Interfaces;
 using PRN232.LMS.Services.Models;
+using System.Linq.Expressions;
 
 namespace PRN232.LMS.Services
 {
@@ -31,5 +35,42 @@ namespace PRN232.LMS.Services
             };
             return studentModel;
         }
+
+        public async Task<PagedResult<dynamic>> GetStudentsAsync(QueryParameters queryParams)
+        {
+            Expression<Func<Student, bool>>? searchFilter = null;
+            if (!string.IsNullOrWhiteSpace(queryParams.Search))
+            {
+                searchFilter = s =>
+                    s.FullName.Contains(queryParams.Search) ||
+                    s.Email.Contains(queryParams.Search);
+            }
+
+            var (students, totalCount) = await _studentRepository
+                .GetCollectionAsync(queryParams, searchFilter);
+
+            var businessModels = students.Select(s => new StudentModel
+            {
+                Id = s.StudentId,
+                FullName = s.FullName,
+                Email = s.Email,
+                DateOfBirth = s.DateOfBirth
+            }).ToList();
+
+            var shaped = businessModels.ShapeData(queryParams.Fields);
+
+            return new PagedResult<dynamic>
+            {
+                Items = shaped,
+                Pagination = new PaginationMetadata
+                {
+                    Page = queryParams.Page,
+                    PageSize = queryParams.Size,
+                    TotalItems = totalCount,
+                    TotalPages = (int)Math.Ceiling(totalCount / (double)queryParams.Size)
+                }
+            };
+        }
+        
     }
 }
