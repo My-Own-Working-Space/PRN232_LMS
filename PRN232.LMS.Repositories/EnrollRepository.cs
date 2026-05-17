@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,7 @@ using PRN232.LMS.Repositories.Models;
 
 namespace PRN232.LMS.Repositories
 {
-    public class EnrollRepository(LMSDatabaseContext _context) : IEnrollRepository
+    public class EnrollRepository(LMSDatabaseContext _context) : Repository<Enrollment>(_context), IEnrollRepository
     {
         public List<Enrollment> GetEnrolls()
         {

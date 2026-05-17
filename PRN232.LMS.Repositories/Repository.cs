@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using PRN232.LMS.Repositories.Extensions;
-using PRN232.LMS.Services.Common;
 using System.Linq.Expressions;
 
 namespace PRN232.LMS.Repositories
@@ -17,22 +16,25 @@ namespace PRN232.LMS.Repositories
         }
 
         public async Task<(IEnumerable<T> Data, int TotalCount)> GetCollectionAsync(
-            QueryParameters queryParams,
+            string? expand,
+            string? sort,
+            int page,
+            int size,
             Expression<Func<T, bool>>? searchFilter = null)
         {
             IQueryable<T> query = _dbSet.AsNoTracking();
 
-            query = query.ApplyExpansion(queryParams.Expand);
+            query = query.ApplyExpansion(expand);
 
             if (searchFilter != null)
                 query = query.Where(searchFilter);
 
-            query = query.ApplySorting(queryParams.Sort);
+            query = query.ApplySorting(sort);
 
             int totalCount = await query.CountAsync();
             var data = await query
-                .Skip((queryParams.Page - 1) * queryParams.Size)
-                .Take(queryParams.Size)
+                .Skip((page - 1) * size)
+                .Take(size)
                 .ToListAsync();
 
             return (data, totalCount);

@@ -2,7 +2,6 @@ using PRN232.LMS.Repositories.Interfaces;
 using PRN232.LMS.Repositories.Models;
 using PRN232.LMS.Repositories.Extensions;
 using PRN232.LMS.Services.Common;
-using PRN232.LMS.Services.Interfaces;
 using PRN232.LMS.Services.Models;
 using System.Linq.Expressions;
 
@@ -47,7 +46,7 @@ namespace PRN232.LMS.Services
             }
 
             var (students, totalCount) = await _studentRepository
-                .GetCollectionAsync(queryParams, searchFilter);
+                .GetCollectionAsync(queryParams.Expand, queryParams.Sort, queryParams.Page, queryParams.Size, searchFilter);
 
             var businessModels = students.Select(s => new StudentModel
             {

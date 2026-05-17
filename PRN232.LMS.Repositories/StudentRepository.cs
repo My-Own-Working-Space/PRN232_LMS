@@ -1,9 +1,9 @@
-﻿using PRN232.LMS.Repositories.Interfaces;
+using PRN232.LMS.Repositories.Interfaces;
 using PRN232.LMS.Repositories.Models;
 
 namespace PRN232.LMS.Repositories
 {
-    public class StudentRepository(LMSDatabaseContext _context) : IStudentRepository
+    public class StudentRepository(LMSDatabaseContext _context) : Repository<Student>(_context), IStudentRepository
     {
         public List<Student> GetStudents()
         {

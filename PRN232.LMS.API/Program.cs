@@ -1,4 +1,5 @@
 using PRN232.LMS.Services;
+using PRN232.LMS.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 

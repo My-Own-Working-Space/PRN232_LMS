@@ -1,23 +1,23 @@
-﻿using PRN232.LMS.Repositories.Interfaces;
+using PRN232.LMS.Repositories.Interfaces;
+using PRN232.LMS.Repositories.Models;
+using PRN232.LMS.Repositories.Extensions;
+using PRN232.LMS.Services.Common;
 using PRN232.LMS.Services.Models;
+using System.Linq.Expressions;
 
 namespace PRN232.LMS.Services
 {
-    public class EnrollService(IEnrollRepository _enrollRepository) : IEnrollService
+    public class EnrollService(IEnrollRepository _enrollmentRepository) : IEnrollService
     {
         public List<EnrollModel> GetEnrolls()
         {
-            List<EnrollModel> enrollments = _enrollRepository.GetEnrolls().Select(e => new EnrollModel()
+            List<EnrollModel> enrollments = _enrollmentRepository.GetEnrolls().Select(e => new EnrollModel()
             {
                 EnrollmentId = e.EnrollmentId,
-                Student = e.Student,
                 CourseId = e.CourseId,
+                StudentId = e.StudentId,
                 EnrollDate = e.EnrollDate,
-                Status = e.Status,
-                Course = e.Course,
-                Grades = e.Grades.ToList(),
-                Subject = e.Grades.FirstOrDefault()?.Subject,
-                Semester = e.Course.Semester
+                Status = e.Status
             }).ToList();
 
             return enrollments;
@@ -32,16 +32,20 @@ namespace PRN232.LMS.Services
             }
 
             var (enrollments, totalCount) = await _enrollmentRepository
-                .GetCollectionAsync(queryParams, searchFilter);
+                .GetCollectionAsync(queryParams.Expand, queryParams.Sort, queryParams.Page, queryParams.Size, searchFilter);
 
             var shaped = enrollments.ShapeData(queryParams.Fields);
 
             return new PagedResult<dynamic>
             {
                 Items = shaped,
-                TotalCount = totalCount,
-                Page = queryParams.Page,
-                Size = queryParams.Size
+                Pagination = new PaginationMetadata
+                {
+                    Page = queryParams.Page,
+                    PageSize = queryParams.Size,
+                    TotalItems = totalCount,
+                    TotalPages = (int)Math.Ceiling(totalCount / (double)queryParams.Size)
+                }
             };
         }
     }

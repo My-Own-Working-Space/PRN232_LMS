@@ -1,6 +1,80 @@
 @PRN232.LMS.API_HostAddress = http://localhost:5188
 
-GET {{PRN232.LMS.API_HostAddress}}/weatherforecast/
+GET {{PRN232.LMS.API_HostAddress}}/api/semesters
 Accept: application/json
 
 ###
+
+GET {{PRN232.LMS.API_HostAddress}}/api/semesters/1
+Accept: application/json
+
+###
+
+GET {{PRN232.LMS.API_HostAddress}}/api/courses
+Accept: application/json
+
+###
+
+GET {{PRN232.LMS.API_HostAddress}}/api/courses/1
+Accept: application/json
+
+###
+
+GET {{PRN232.LMS.API_HostAddress}}/api/subjects
+Accept: application/json
+
+###
+
+GET {{PRN232.LMS.API_HostAddress}}/api/subjects/1
+Accept: application/json
+
+###
+
+GET {{PRN232.LMS.API_HostAddress}}/api/students
+Accept: application/json
+
+###
+
+GET {{PRN232.LMS.API_HostAddress}}/api/students?search=nguyen
+Accept: application/json
+
+###
+
+GET {{PRN232.LMS.API_HostAddress}}/api/students?sort=fullName,-dateOfBirth
+Accept: application/json
+
+###
+
+GET {{PRN232.LMS.API_HostAddress}}/api/students?page=2&size=10
+Accept: application/json
+
+###
+
+GET {{PRN232.LMS.API_HostAddress}}/api/students?fields=studentId,fullName,email
+Accept: application/json
+
+###
+
+GET {{PRN232.LMS.API_HostAddress}}/api/students/1
+Accept: application/json
+
+###
+
+GET {{PRN232.LMS.API_HostAddress}}/api/enrollments
+Accept: application/json
+
+###
+
+GET {{PRN232.LMS.API_HostAddress}}/api/enrollments?expand=student,course
+Accept: application/json
+
+###
+
+GET {{PRN232.LMS.API_HostAddress}}/api/enrollments?search=active&sort=-enrollDate&page=1&size=20&fields=enrollmentId,status&expand=student,course
+Accept: application/json
+
+###
+
+GET {{PRN232.LMS.API_HostAddress}}/api/enrollments/10
+Accept: application/json
+
