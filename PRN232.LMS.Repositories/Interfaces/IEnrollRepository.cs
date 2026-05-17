@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace PRN232.LMS.Repositories.Interfaces
     public interface IEnrollRepository : IRepository<Enrollment>
     {
         public List<Enrollment> GetEnrolls();
+        public Enrollment GetEnrollmentById(int id);
     }
 }

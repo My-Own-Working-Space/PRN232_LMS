@@ -1,6 +1,4 @@
-using System.Text.Json;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PRN232.LMS.API.Models;
 using PRN232.LMS.Services;
 using PRN232.LMS.Services.Common;
@@ -8,22 +6,22 @@ using PRN232.LMS.Services.Common;
 namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
-    [Route("api/students")]
-    public class StudentController(IStudentService _studentService) : ControllerBase
+    [Route("api/enrollments")]
+    public class EnrollmentController(IEnrollService _enrollService) : Controller
     {
         [HttpGet("{id}")]
-        public IActionResult GetStudentById(int id)
+        public IActionResult GetEnrollmentById(int id)
         {
             try
             {
-                var student = _studentService.GetStudentById(id);
+                var enrollment = _enrollService.GetEnrollmentById(id);
 
-                if (student == null)
+                if (enrollment == null)
                 {
                     return NotFound(new ApiResponse<object>
                     {
                         Success = false,
-                        Message = $"Student with ID {id} does not exist.",
+                        Message = $"Enrollment with ID {id} does not exist.",
                         Data = null
                     });
                 }
@@ -32,7 +30,7 @@ namespace PRN232.LMS.API.Controllers
                 {
                     Success = true,
                     Message = "Request processed successfully",
-                    Data = student
+                    Data = enrollment
                 });
             }
             catch (Exception ex)
@@ -47,24 +45,22 @@ namespace PRN232.LMS.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetStudents([FromQuery] QueryParameters queryParams)
+        public async Task<IActionResult> GetEnrollments([FromQuery] QueryParameters queryParams)
         {
-            var result = await _studentService.GetStudentsAsync(queryParams);
-
+            var result = await _enrollService.GetEnrollmentsAsync(queryParams);
             if (result == null)
             {
                 return NotFound(new ApiResponse<object>
                 {
                     Success = false,
-                    Message = "No students found",
+                    Message = "No enrollments found",
                     Data = null
                 });
             }
-
             return Ok(new ApiResponse<object>
             {
                 Success = true,
-                Message = "Students retrieved successfully",
+                Message = "Request processed successfully",
                 Data = result
             });
         }

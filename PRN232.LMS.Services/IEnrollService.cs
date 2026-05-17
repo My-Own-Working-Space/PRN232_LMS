@@ -10,8 +10,9 @@ namespace PRN232.LMS.Services
 {
     public interface IEnrollService
     {
-        public List<EnrollModel> GetEnrolls();
-        Task<PagedResult<dynamic>> GetEnrollmentsAsync(QueryParameters queryParams);
+        public Task<PagedResult<dynamic>> GetEnrollmentsAsync(QueryParameters queryParams);
+
+        public EnrollModel GetEnrollmentById(int id);
 
     }
 }

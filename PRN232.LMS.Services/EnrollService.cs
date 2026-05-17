@@ -9,18 +9,21 @@ namespace PRN232.LMS.Services
 {
     public class EnrollService(IEnrollRepository _enrollmentRepository) : IEnrollService
     {
-        public List<EnrollModel> GetEnrolls()
+        public EnrollModel GetEnrollmentById(int id)
         {
-            List<EnrollModel> enrollments = _enrollmentRepository.GetEnrolls().Select(e => new EnrollModel()
-            {
-                EnrollmentId = e.EnrollmentId,
-                CourseId = e.CourseId,
-                StudentId = e.StudentId,
-                EnrollDate = e.EnrollDate,
-                Status = e.Status
-            }).ToList();
+            var enrollment = _enrollmentRepository.GetEnrollmentById(id);
 
-            return enrollments;
+            EnrollModel enrollModel = new EnrollModel
+            {
+                EnrollmentId = enrollment.EnrollmentId,
+                CourseId = enrollment.CourseId,
+                StudentId = enrollment.StudentId,
+                EnrollDate = enrollment.EnrollDate,
+                Status = enrollment.Status
+            };
+
+            return enrollModel;
+
         }
 
         public async Task<PagedResult<dynamic>> GetEnrollmentsAsync(QueryParameters queryParams)

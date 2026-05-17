@@ -11,6 +11,17 @@ namespace PRN232.LMS.Repositories
 {
     public class EnrollRepository(LMSDatabaseContext _context) : Repository<Enrollment>(_context), IEnrollRepository
     {
+        public Enrollment GetEnrollmentById(int id)
+        {
+            return _context.Enrollments
+                .Include(e => e.Student)
+                .Include(e => e.Course)
+                    .ThenInclude(c => c.Semester)
+                .Include(e => e.Grades)
+                    .ThenInclude(g => g.Subject)
+                .FirstOrDefault(e => e.EnrollmentId == id) ?? new Enrollment();
+        }
+
         public List<Enrollment> GetEnrolls()
         {
             return _context.Enrollments
