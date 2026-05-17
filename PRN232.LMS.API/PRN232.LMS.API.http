@@ -1,80 +1,80 @@
-@PRN232.LMS.API_HostAddress = http://localhost:5188
+@HostAddress = http://localhost:5288
 
-# GET {{PRN232.LMS.API_HostAddress}}/api/semesters
+# GET {{HostAddress}}/api/semesters
 # Accept: application/json
 
 # ###
 
-# GET {{PRN232.LMS.API_HostAddress}}/api/semesters/1
+# GET {{HostAddress}}/api/semesters/1
 # Accept: application/json
 
 # ###
 
-# GET {{PRN232.LMS.API_HostAddress}}/api/courses
+# GET {{HostAddress}}/api/courses
 # Accept: application/json
 
 # ###
 
-# GET {{PRN232.LMS.API_HostAddress}}/api/courses/1
+# GET {{HostAddress}}/api/courses/1
 # Accept: application/json
 
 # ###
 
-# GET {{PRN232.LMS.API_HostAddress}}/api/subjects
+# GET {{HostAddress}}/api/subjects
 # Accept: application/json
 
 # ###
 
-# GET {{PRN232.LMS.API_HostAddress}}/api/subjects/1
+# GET {{HostAddress}}/api/subjects/1
 # Accept: application/json
 
 ###
 
-GET {{PRN232.LMS.API_HostAddress}}/api/students
+GET {{HostAddress}}/api/students
 Accept: application/json
 
 ###
 
-GET {{PRN232.LMS.API_HostAddress}}/api/students?search=nguyen
+GET {{HostAddress}}/api/students?search=nguyen
 Accept: application/json
 
 ###
 
-GET {{PRN232.LMS.API_HostAddress}}/api/students?sort=fullName,-dateOfBirth
+GET {{HostAddress}}/api/students?sort=fullName,-dateOfBirth
 Accept: application/json
 
 ###
 
-GET {{PRN232.LMS.API_HostAddress}}/api/students?page=2&size=10
+GET {{HostAddress}}/api/students?page=2&size=10
 Accept: application/json
 
 ###
 
-GET {{PRN232.LMS.API_HostAddress}}/api/students?fields=studentId,fullName,email
+GET {{HostAddress}}/api/students?fields=studentId,fullName,email
 Accept: application/json
 
 ###
 
-GET {{PRN232.LMS.API_HostAddress}}/api/students/1
+GET {{HostAddress}}/api/students/1
 Accept: application/json
 
 ###
 
-GET {{PRN232.LMS.API_HostAddress}}/api/enrollments
+GET {{HostAddress}}/api/enrollments
 Accept: application/json
 
 ###
 
-GET {{PRN232.LMS.API_HostAddress}}/api/enrollments?expand=student,course
+GET {{HostAddress}}/api/enrollments?expand=student,course
 Accept: application/json
 
 ###
 
-GET {{PRN232.LMS.API_HostAddress}}/api/enrollments?search=active&sort=-enrollDate&page=1&size=20&fields=enrollmentId,status&expand=student,course
+GET {{HostAddress}}/api/enrollments?search=active&sort=-enrollDate&page=1&size=20&fields=enrollmentId,status&expand=student,course
 Accept: application/json
 
 ###
 
-GET {{PRN232.LMS.API_HostAddress}}/api/enrollments/10
+GET {{HostAddress}}/api/enrollments/10
 Accept: application/json
 
