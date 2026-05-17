@@ -1,32 +1,32 @@
 @PRN232.LMS.API_HostAddress = http://localhost:5188
 
-GET {{PRN232.LMS.API_HostAddress}}/api/semesters
-Accept: application/json
+# GET {{PRN232.LMS.API_HostAddress}}/api/semesters
+# Accept: application/json
 
-###
+# ###
 
-GET {{PRN232.LMS.API_HostAddress}}/api/semesters/1
-Accept: application/json
+# GET {{PRN232.LMS.API_HostAddress}}/api/semesters/1
+# Accept: application/json
 
-###
+# ###
 
-GET {{PRN232.LMS.API_HostAddress}}/api/courses
-Accept: application/json
+# GET {{PRN232.LMS.API_HostAddress}}/api/courses
+# Accept: application/json
 
-###
+# ###
 
-GET {{PRN232.LMS.API_HostAddress}}/api/courses/1
-Accept: application/json
+# GET {{PRN232.LMS.API_HostAddress}}/api/courses/1
+# Accept: application/json
 
-###
+# ###
 
-GET {{PRN232.LMS.API_HostAddress}}/api/subjects
-Accept: application/json
+# GET {{PRN232.LMS.API_HostAddress}}/api/subjects
+# Accept: application/json
 
-###
+# ###
 
-GET {{PRN232.LMS.API_HostAddress}}/api/subjects/1
-Accept: application/json
+# GET {{PRN232.LMS.API_HostAddress}}/api/subjects/1
+# Accept: application/json
 
 ###
 

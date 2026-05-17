@@ -12,7 +12,10 @@ namespace PRN232.LMS.Repositories.Extensions
         
             foreach (var item in expansion.Split(",", StringSplitOptions.RemoveEmptyEntries))
             {
-                query = query.Include(item.Trim());
+                var parts = item.Trim().Split('.');
+                var pascalCaseItem = string.Join(".", parts.Select(p => p.Length > 0 ? char.ToUpper(p[0]) + p.Substring(1) : p));
+                
+                query = query.Include(pascalCaseItem);
             }
             return query;
         }
