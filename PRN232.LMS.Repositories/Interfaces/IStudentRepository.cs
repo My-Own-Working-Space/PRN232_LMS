@@ -11,5 +11,6 @@ namespace PRN232.LMS.Repositories.Interfaces
     {
         public List<Student> GetStudents();
         public Student GetStudentById(int id);
+        public void AddStudent(Student student);
     }
 }

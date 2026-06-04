@@ -52,9 +52,39 @@ All list APIs support:
 - **Enrollment**: Id, StudentId, CourseId, EnrollDate, Status.
 
 ### 6. Docker Deployment
-- Database (SQL Server) running via Docker.
-- API running inside Docker containers.
-- Includes `Dockerfile` and `docker-compose.yml`.
+- Database (SQL Server 2022) and API run fully inside Docker containers.
+- Database schema and seed data are **automatically initialized** from `LMSDB.sql` on first startup.
+- No manual database restore or SQL import required.
+- Includes `Dockerfile`, `docker-compose.yml`, and unified `entrypoint.sh`.
+
+## Quick Start (Docker)
+
+**Prerequisites:** Docker and Docker Compose installed.
+
+```bash
+git clone <repository-url>
+cd PRN232_LMS
+docker compose up --build
+```
+
+The system will:
+1. Start SQL Server 2022 in a container.
+2. Automatically create the `LMSDatabase` and import all tables + seed data from `LMSDB.sql`.
+3. Wait for the database to be fully ready (healthcheck).
+4. Start the ASP.NET Core API on port **5288**.
+
+Once started:
+- **Swagger UI**: [http://localhost:5288/swagger](http://localhost:5288/swagger)
+- **API Base URL**: `http://localhost:5288/api`
+- **SQL Server**: `localhost:1434` (sa / see `.env`)
+
+> **Note:** Database is only initialized on the first run. Subsequent restarts preserve existing data.
+
+To stop and clean up:
+```bash
+docker compose down       # Stop containers (keep data)
+docker compose down -v    # Stop containers and delete database volume
+```
 
 ### 7. Documentation
 - Full Swagger/OpenAPI integration for endpoint listing and testing.

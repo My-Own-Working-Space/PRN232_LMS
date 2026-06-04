@@ -14,5 +14,9 @@ namespace PRN232.LMS.Services
 
         public EnrollModel GetEnrollmentById(int id);
 
+        public Task<PagedResult<dynamic>> GetEnrollmentsByCourseIdAsync(int courseId, QueryParameters queryParams);
+        public Task<PagedResult<dynamic>> GetEnrollmentsByStudentIdAsync(int studentId, QueryParameters queryParams);
+
+        public EnrollModel CreateEnrollment(EnrollModel model);
     }
 }

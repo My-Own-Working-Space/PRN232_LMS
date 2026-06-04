@@ -7,22 +7,22 @@ using PRN232.LMS.Services.Models;
 namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
-    [Route("api/enrollments")]
-    public class EnrollmentController(IEnrollService _enrollService) : Controller
+    [Route("api/semesters")]
+    public class SemesterController(ISemesterService _semesterService) : ControllerBase
     {
         [HttpGet("{id}")]
-        public IActionResult GetEnrollmentById(int id)
+        public IActionResult GetSemesterById(int id)
         {
             try
             {
-                var enrollment = _enrollService.GetEnrollmentById(id);
+                var semester = _semesterService.GetSemesterById(id);
 
-                if (enrollment == null)
+                if (semester == null || semester.SemesterId == 0)
                 {
                     return NotFound(new ApiResponse<object>
                     {
                         Success = false,
-                        Message = $"Enrollment with ID {id} does not exist.",
+                        Message = $"Semester with ID {id} does not exist.",
                         Data = null
                     });
                 }
@@ -31,7 +31,7 @@ namespace PRN232.LMS.API.Controllers
                 {
                     Success = true,
                     Message = "Request processed successfully",
-                    Data = enrollment
+                    Data = semester
                 });
             }
             catch (Exception ex)
@@ -46,36 +46,38 @@ namespace PRN232.LMS.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetEnrollments([FromQuery] QueryParameters queryParams)
+        public async Task<IActionResult> GetSemesters([FromQuery] QueryParameters queryParams)
         {
-            var result = await _enrollService.GetEnrollmentsAsync(queryParams);
+            var result = await _semesterService.GetSemestersAsync(queryParams);
+
             if (result == null)
             {
                 return NotFound(new ApiResponse<object>
                 {
                     Success = false,
-                    Message = "No enrollments found",
+                    Message = "No semesters found",
                     Data = null
                 });
             }
+
             return Ok(new ApiResponse<object>
             {
                 Success = true,
-                Message = "Request processed successfully",
+                Message = "Semesters retrieved successfully",
                 Data = result
             });
         }
 
         [HttpPost]
-        public IActionResult CreateEnrollment([FromBody] EnrollModel model)
+        public IActionResult CreateSemester([FromBody] SemesterModel model)
         {
             try
             {
-                var created = _enrollService.CreateEnrollment(model);
-                return CreatedAtAction(nameof(GetEnrollmentById), new { id = created.EnrollmentId }, new ApiResponse<object>
+                var created = _semesterService.CreateSemester(model);
+                return CreatedAtAction(nameof(GetSemesterById), new { id = created.SemesterId }, new ApiResponse<object>
                 {
                     Success = true,
-                    Message = "Enrollment created successfully",
+                    Message = "Semester created successfully",
                     Data = created
                 });
             }
@@ -84,7 +86,7 @@ namespace PRN232.LMS.API.Controllers
                 return BadRequest(new ApiResponse<object>
                 {
                     Success = false,
-                    Message = "An error occurred while creating the enrollment",
+                    Message = "An error occurred while creating the semester",
                     Errors = ex.Message
                 });
             }

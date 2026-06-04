@@ -13,7 +13,12 @@ namespace PRN232.LMS.Repositories
         public Student GetStudentById(int id)
         {
             return _context.Students.FirstOrDefault(s => s.StudentId == id) ?? new Student();
+        }
 
+        public void AddStudent(Student student)
+        {
+            _context.Students.Add(student);
+            _context.SaveChanges();
         }
     }
 }

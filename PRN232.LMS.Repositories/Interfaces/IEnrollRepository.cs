@@ -12,5 +12,6 @@ namespace PRN232.LMS.Repositories.Interfaces
     {
         public List<Enrollment> GetEnrolls();
         public Enrollment GetEnrollmentById(int id);
+        public void AddEnrollment(Enrollment enrollment);
     }
 }

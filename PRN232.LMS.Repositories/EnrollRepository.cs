@@ -32,5 +32,11 @@ namespace PRN232.LMS.Repositories
                     .ThenInclude(g => g.Subject)
                 .ToList();
         }
+
+        public void AddEnrollment(Enrollment enrollment)
+        {
+            _context.Enrollments.Add(enrollment);
+            _context.SaveChanges();
+        }
     }
 }

@@ -51,5 +51,80 @@ namespace PRN232.LMS.Services
                 }
             };
         }
+
+        public async Task<PagedResult<dynamic>> GetEnrollmentsByCourseIdAsync(int courseId, QueryParameters queryParams)
+        {
+            Expression<Func<Enrollment, bool>> searchFilter = e => e.CourseId == courseId;
+            if (!string.IsNullOrWhiteSpace(queryParams.Search))
+            {
+                searchFilter = e => e.CourseId == courseId && e.Status.Contains(queryParams.Search);
+            }
+
+            var (enrollments, totalCount) = await _enrollmentRepository
+                .GetCollectionAsync(queryParams.Expand, queryParams.Sort, queryParams.Page, queryParams.Size, searchFilter);
+
+            var shaped = enrollments.ShapeData(queryParams.Fields);
+
+            return new PagedResult<dynamic>
+            {
+                Items = shaped,
+                Pagination = new PaginationMetadata
+                {
+                    Page = queryParams.Page,
+                    PageSize = queryParams.Size,
+                    TotalItems = totalCount,
+                    TotalPages = (int)Math.Ceiling(totalCount / (double)queryParams.Size)
+                }
+            };
+        }
+
+        public async Task<PagedResult<dynamic>> GetEnrollmentsByStudentIdAsync(int studentId, QueryParameters queryParams)
+        {
+            Expression<Func<Enrollment, bool>> searchFilter = e => e.StudentId == studentId;
+            if (!string.IsNullOrWhiteSpace(queryParams.Search))
+            {
+                searchFilter = e => e.StudentId == studentId && e.Status.Contains(queryParams.Search);
+            }
+
+            var (enrollments, totalCount) = await _enrollmentRepository
+                .GetCollectionAsync(queryParams.Expand, queryParams.Sort, queryParams.Page, queryParams.Size, searchFilter);
+
+            var shaped = enrollments.ShapeData(queryParams.Fields);
+
+            return new PagedResult<dynamic>
+            {
+                Items = shaped,
+                Pagination = new PaginationMetadata
+                {
+                    Page = queryParams.Page,
+                    PageSize = queryParams.Size,
+                    TotalItems = totalCount,
+                    TotalPages = (int)Math.Ceiling(totalCount / (double)queryParams.Size)
+                }
+            };
+        }
+
+        public EnrollModel CreateEnrollment(EnrollModel model)
+        {
+            // Check if enrollment already exists (StudentId + CourseId must be unique)
+            var exists = _enrollmentRepository.GetEnrolls().Any(e => e.StudentId == model.StudentId && e.CourseId == model.CourseId);
+            if (exists)
+            {
+                throw new InvalidOperationException($"Student with ID {model.StudentId} is already enrolled in Course with ID {model.CourseId}.");
+            }
+
+            var enrollment = new Enrollment
+            {
+                StudentId = model.StudentId,
+                CourseId = model.CourseId,
+                EnrollDate = model.EnrollDate == default ? DateTime.Now : model.EnrollDate,
+                Status = model.Status ?? "Active"
+            };
+
+            _enrollmentRepository.AddEnrollment(enrollment);
+
+            model.EnrollmentId = enrollment.EnrollmentId;
+            return model;
+        }
     }
 }

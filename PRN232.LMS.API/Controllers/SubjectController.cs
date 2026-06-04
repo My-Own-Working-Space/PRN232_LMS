@@ -7,22 +7,22 @@ using PRN232.LMS.Services.Models;
 namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
-    [Route("api/enrollments")]
-    public class EnrollmentController(IEnrollService _enrollService) : Controller
+    [Route("api/subjects")]
+    public class SubjectController(ISubjectService _subjectService) : ControllerBase
     {
         [HttpGet("{id}")]
-        public IActionResult GetEnrollmentById(int id)
+        public IActionResult GetSubjectById(int id)
         {
             try
             {
-                var enrollment = _enrollService.GetEnrollmentById(id);
+                var subject = _subjectService.GetSubjectById(id);
 
-                if (enrollment == null)
+                if (subject == null || subject.SubjectId == 0)
                 {
                     return NotFound(new ApiResponse<object>
                     {
                         Success = false,
-                        Message = $"Enrollment with ID {id} does not exist.",
+                        Message = $"Subject with ID {id} does not exist.",
                         Data = null
                     });
                 }
@@ -31,7 +31,7 @@ namespace PRN232.LMS.API.Controllers
                 {
                     Success = true,
                     Message = "Request processed successfully",
-                    Data = enrollment
+                    Data = subject
                 });
             }
             catch (Exception ex)
@@ -46,36 +46,38 @@ namespace PRN232.LMS.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetEnrollments([FromQuery] QueryParameters queryParams)
+        public async Task<IActionResult> GetSubjects([FromQuery] QueryParameters queryParams)
         {
-            var result = await _enrollService.GetEnrollmentsAsync(queryParams);
+            var result = await _subjectService.GetSubjectsAsync(queryParams);
+
             if (result == null)
             {
                 return NotFound(new ApiResponse<object>
                 {
                     Success = false,
-                    Message = "No enrollments found",
+                    Message = "No subjects found",
                     Data = null
                 });
             }
+
             return Ok(new ApiResponse<object>
             {
                 Success = true,
-                Message = "Request processed successfully",
+                Message = "Subjects retrieved successfully",
                 Data = result
             });
         }
 
         [HttpPost]
-        public IActionResult CreateEnrollment([FromBody] EnrollModel model)
+        public IActionResult CreateSubject([FromBody] SubjectModel model)
         {
             try
             {
-                var created = _enrollService.CreateEnrollment(model);
-                return CreatedAtAction(nameof(GetEnrollmentById), new { id = created.EnrollmentId }, new ApiResponse<object>
+                var created = _subjectService.CreateSubject(model);
+                return CreatedAtAction(nameof(GetSubjectById), new { id = created.SubjectId }, new ApiResponse<object>
                 {
                     Success = true,
-                    Message = "Enrollment created successfully",
+                    Message = "Subject created successfully",
                     Data = created
                 });
             }
@@ -84,7 +86,7 @@ namespace PRN232.LMS.API.Controllers
                 return BadRequest(new ApiResponse<object>
                 {
                     Success = false,
-                    Message = "An error occurred while creating the enrollment",
+                    Message = "An error occurred while creating the subject",
                     Errors = ex.Message
                 });
             }

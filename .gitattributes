@@ -61,3 +61,11 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+###############################################################################
+# Force LF line endings for shell scripts and SQL files
+# Prevents Windows CRLF conversion that breaks bash execution in Docker
+###############################################################################
+*.sh     text eol=lf
+*.sql    text eol=lf
+Dockerfile text eol=lf

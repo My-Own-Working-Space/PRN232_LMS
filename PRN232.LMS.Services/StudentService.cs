@@ -70,6 +70,27 @@ namespace PRN232.LMS.Services
                 }
             };
         }
-        
+
+        public StudentModel CreateStudent(StudentModel model)
+        {
+            // Check if email already exists in the database
+            var emailExists = _studentRepository.GetStudents().Any(s => s.Email.Equals(model.Email, StringComparison.OrdinalIgnoreCase));
+            if (emailExists)
+            {
+                throw new InvalidOperationException($"Email '{model.Email}' is already registered.");
+            }
+
+            var student = new Student
+            {
+                FullName = model.FullName,
+                Email = model.Email,
+                DateOfBirth = model.DateOfBirth
+            };
+
+            _studentRepository.AddStudent(student);
+
+            model.Id = student.StudentId;
+            return model;
+        }
     }
 }

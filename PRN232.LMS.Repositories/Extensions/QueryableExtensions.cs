@@ -24,7 +24,6 @@ namespace PRN232.LMS.Repositories.Extensions
         {
             if (string.IsNullOrEmpty(sort)) return query;
 
-            // Simple manual sorting for core fields to avoid external dependencies
             var fields = sort.Split(',', StringSplitOptions.RemoveEmptyEntries);
             foreach (var field in fields)
             {
@@ -32,9 +31,6 @@ namespace PRN232.LMS.Repositories.Extensions
                 bool descending = trimmedField.StartsWith("-");
                 var propertyName = descending ? trimmedField.Substring(1) : trimmedField;
 
-                // For a more 'pro' simplest way without Dynamic LINQ, we use a simple reflection-based OrderBy
-                // or just handle key fields if it's a specific entity. 
-                // For PRN232 Lab 1, a basic reflection approach is clean enough.
                 var propertyInfo = typeof(T).GetProperty(propertyName, 
                     System.Reflection.BindingFlags.IgnoreCase | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
 

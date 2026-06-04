@@ -1,15 +1,14 @@
-using System.Text.Json;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PRN232.LMS.API.Models;
 using PRN232.LMS.Services;
 using PRN232.LMS.Services.Common;
+using PRN232.LMS.Services.Models;
 
 namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
     [Route("api/students")]
-    public class StudentController(IStudentService _studentService) : ControllerBase
+    public class StudentController(IStudentService _studentService, IEnrollService _enrollService) : ControllerBase
     {
         [HttpGet("{id}")]
         public IActionResult GetStudentById(int id)
@@ -67,6 +66,101 @@ namespace PRN232.LMS.API.Controllers
                 Message = "Students retrieved successfully",
                 Data = result
             });
+        }
+
+        [HttpPost]
+        public IActionResult CreateStudent([FromBody] StudentModel model)
+        {
+            try
+            {
+                var created = _studentService.CreateStudent(model);
+                return CreatedAtAction(nameof(GetStudentById), new { id = created.Id }, new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Student created successfully",
+                    Data = created
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "An error occurred while creating the student",
+                    Errors = ex.Message
+                });
+            }
+        }
+
+        [HttpGet("{id}/enrollments")]
+        public async Task<IActionResult> GetEnrollmentsByStudentId(int id, [FromQuery] QueryParameters queryParams)
+        {
+            try
+            {
+                var student = _studentService.GetStudentById(id);
+                if (student == null || student.Id == 0)
+                {
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = $"Student with ID {id} does not exist.",
+                        Data = null
+                    });
+                }
+
+                var result = await _enrollService.GetEnrollmentsByStudentIdAsync(id, queryParams);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Enrollments retrieved successfully",
+                    Data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "An error occurred while processing the request",
+                    Errors = ex.Message
+                });
+            }
+        }
+
+        [HttpPost("{id}/enrollments")]
+        public IActionResult CreateEnrollmentForStudent(int id, [FromBody] EnrollModel model)
+        {
+            try
+            {
+                var student = _studentService.GetStudentById(id);
+                if (student == null || student.Id == 0)
+                {
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = $"Student with ID {id} does not exist.",
+                        Data = null
+                    });
+                }
+
+                model.StudentId = id;
+                var created = _enrollService.CreateEnrollment(model);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Enrollment created successfully",
+                    Data = created
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "An error occurred while creating the enrollment",
+                    Errors = ex.Message
+                });
+            }
         }
     }
 }

@@ -1,80 +1,179 @@
 @HostAddress = http://localhost:5288
 
-# GET {{HostAddress}}/api/semesters
-# Accept: application/json
-
-# ###
-
-# GET {{HostAddress}}/api/semesters/1
-# Accept: application/json
-
-# ###
-
-# GET {{HostAddress}}/api/courses
-# Accept: application/json
-
-# ###
-
-# GET {{HostAddress}}/api/courses/1
-# Accept: application/json
-
-# ###
-
-# GET {{HostAddress}}/api/subjects
-# Accept: application/json
-
-# ###
-
-# GET {{HostAddress}}/api/subjects/1
-# Accept: application/json
-
-###
-
-GET {{HostAddress}}/api/students
+GET {{HostAddress}}/api/students?search=nguyen&sort=fullName&page=1&size=10&fields=studentId,fullName,email
 Accept: application/json
 
 ###
-
 GET {{HostAddress}}/api/students?search=nguyen
 Accept: application/json
 
 ###
-
 GET {{HostAddress}}/api/students?sort=fullName,-dateOfBirth
 Accept: application/json
 
 ###
-
 GET {{HostAddress}}/api/students?page=2&size=10
 Accept: application/json
 
 ###
-
 GET {{HostAddress}}/api/students?fields=studentId,fullName,email
 Accept: application/json
 
 ###
+GET {{HostAddress}}/api/students
+Accept: application/json
 
+###
 GET {{HostAddress}}/api/students/1
 Accept: application/json
 
 ###
-
-GET {{HostAddress}}/api/enrollments
+GET {{HostAddress}}/api/students/1/enrollments
 Accept: application/json
 
 ###
-
-GET {{HostAddress}}/api/enrollments?expand=student,course
+POST {{HostAddress}}/api/students
+Content-Type: application/json
 Accept: application/json
 
-###
+{
+  "fullName": "A B D",
+  "email": "abd@gmail.com",
+  "dateOfBirth": "2002-05-15T00:00:00"
+}
 
+###
+POST {{HostAddress}}/api/students/1/enrollments
+Content-Type: application/json
+Accept: application/json
+
+{
+  "courseId": 2,
+  "enrollDate": "2026-06-01T16:00:00Z",
+  "status": "Active"
+}
+
+###
 GET {{HostAddress}}/api/enrollments?search=active&sort=-enrollDate&page=1&size=20&fields=enrollmentId,status&expand=student,course
 Accept: application/json
 
 ###
-
-GET {{HostAddress}}/api/enrollments/10
+GET {{HostAddress}}/api/enrollments?expand=student,course
 Accept: application/json
 
+###
+GET {{HostAddress}}/api/courses/1/enrollments?expand=student
+Accept: application/json
+
+###
+POST {{HostAddress}}/api/enrollments
+Content-Type: application/json
+Accept: application/json
+
+{
+  "studentId": 61,
+  "courseId": 1,
+  "enrollDate": "2026-06-01T16:00:00Z",
+  "status": "Active"
+}
+
+###
+GET {{HostAddress}}/api/courses?page=1&size=5
+Accept: application/json
+
+###
+POST {{HostAddress}}/api/courses
+Content-Type: application/json
+Accept: application/json
+
+{
+  "courseName": "Advanced .NET Programming",
+  "semesterId": 1
+}
+
+###
+POST {{HostAddress}}/api/courses/1/enrollments
+Content-Type: application/json
+Accept: application/json
+
+{
+  "studentId": 2,
+  "enrollDate": "2026-06-01T16:00:00Z",
+  "status": "Active"
+}
+
+###
+GET {{HostAddress}}/api/courses/1/subjects
+Accept: application/json
+
+###
+POST {{HostAddress}}/api/courses/1/subjects
+Content-Type: application/json
+Accept: application/json
+
+{
+  "subjectId": 2
+}
+
+###
+POST {{HostAddress}}/api/semesters/1/courses
+Content-Type: application/json
+Accept: application/json
+
+{
+  "courseName": "Web Application Architecture"
+}
+
+###
+GET {{HostAddress}}/api/subjects
+Accept: application/json
+
+###
+GET {{HostAddress}}/api/subjects/12
+Accept: application/json
+
+###
+POST {{HostAddress}}/api/subjects
+Content-Type: application/json
+Accept: application/json
+
+{
+  "subjectCode": "PRN242",
+  "subjectName": "Advanced on ASP.NET Core",
+  "credit": 4
+}
+
+###
+GET {{HostAddress}}/api/semesters?search=Summer&sort=semesterName&page=1&size=5&fields=semesterId,semesterName
+Accept: application/json
+
+###
+GET {{HostAddress}}/api/semesters
+Accept: application/json
+
+###
+GET {{HostAddress}}/api/semesters?expand=courses
+Accept: application/json
+
+###
+GET {{HostAddress}}/api/semesters/1
+Accept: application/json
+
+###
+GET {{HostAddress}}/api/semesters/1?expand=courses
+Accept: application/json
+
+###
+GET {{HostAddress}}/api/semesters/1/courses
+Accept: application/json
+
+###
+POST {{HostAddress}}/api/semesters
+Content-Type: application/json
+Accept: application/json
+
+{
+  "semesterName": "Summer 2026",
+  "startDate": "2026-05-01T00:00:00",
+  "endDate": "2026-08-31T23:59:59"
+}
