@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PRN232.LMS.API.Models;
+using PRN232.LMS.API.Models.Requests;
 using PRN232.LMS.Services;
 using PRN232.LMS.Services.Common;
 using PRN232.LMS.Services.Models;
@@ -58,7 +59,7 @@ namespace PRN232.LMS.API.Controllers
         }
 
         [HttpPost("{id}/enrollments")]
-        public IActionResult CreateEnrollmentForCourse(int id, [FromBody] EnrollModel model)
+        public IActionResult CreateEnrollmentForCourse(int id, [FromBody] CreateEnrollmentRequest request)
         {
             try
             {
@@ -73,7 +74,13 @@ namespace PRN232.LMS.API.Controllers
                     });
                 }
 
-                model.CourseId = id;
+                var model = new EnrollModel
+                {
+                    CourseId = id,
+                    StudentId = request.StudentId,
+                    EnrollDate = DateTime.Now,
+                    Status = request.Status
+                };
                 var created = _enrollService.CreateEnrollment(model);
                 return CreatedAtAction(nameof(GetCourseById), new { id = id }, new ApiResponse<object>
                 {
@@ -152,10 +159,15 @@ namespace PRN232.LMS.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateCourse([FromBody] CourseModel model)
+        public IActionResult CreateCourse([FromBody] CreateCourseRequest request)
         {
             try
             {
+                var model = new CourseModel
+                {
+                    CourseName = request.CourseName,
+                    SemesterId = request.SemesterId
+                };
                 var created = _courseService.CreateCourse(model);
                 return CreatedAtAction(nameof(GetCourseById), new { id = created.CourseId }, new ApiResponse<object>
                 {
@@ -176,11 +188,15 @@ namespace PRN232.LMS.API.Controllers
         }
 
         [HttpPost("~/api/semesters/{semesterId}/courses")]
-        public IActionResult CreateCourseForSemester(int semesterId, [FromBody] CourseModel model)
+        public IActionResult CreateCourseForSemester(int semesterId, [FromBody] CreateCourseRequest request)
         {
             try
             {
-                model.SemesterId = semesterId;
+                var model = new CourseModel
+                {
+                    CourseName = request.CourseName,
+                    SemesterId = semesterId
+                };
                 var created = _courseService.CreateCourse(model);
                 
                 return CreatedAtAction(nameof(GetCourseById), new { id = created.CourseId }, new ApiResponse<object>
@@ -272,7 +288,7 @@ namespace PRN232.LMS.API.Controllers
         }
 
         [HttpPost("{id}/subjects")]
-        public IActionResult CreateCourseSubjectForCourse(int id, [FromBody] CourseSubjectModel model)
+        public IActionResult CreateCourseSubjectForCourse(int id, [FromBody] CreateCourseSubjectRequest request)
         {
             try
             {
@@ -287,7 +303,11 @@ namespace PRN232.LMS.API.Controllers
                     });
                 }
 
-                model.CourseId = id;
+                var model = new CourseSubjectModel
+                {
+                    CourseId = id,
+                    SubjectId = request.SubjectId
+                };
                 var created = _courseSubjectService.CreateCourseSubject(model);
                 return Ok(new ApiResponse<object>
                 {

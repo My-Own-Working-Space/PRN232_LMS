@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PRN232.LMS.API.Models;
+using PRN232.LMS.API.Models.Requests;
 using PRN232.LMS.Services;
 using PRN232.LMS.Services.Common;
 using PRN232.LMS.Services.Models;
@@ -69,10 +70,16 @@ namespace PRN232.LMS.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateSubject([FromBody] SubjectModel model)
+        public IActionResult CreateSubject([FromBody] CreateSubjectRequest request)
         {
             try
             {
+                var model = new SubjectModel
+                {
+                    SubjectCode = request.SubjectCode,
+                    SubjectName = request.SubjectName,
+                    Credit = request.Credit
+                };
                 var created = _subjectService.CreateSubject(model);
                 return CreatedAtAction(nameof(GetSubjectById), new { id = created.SubjectId }, new ApiResponse<object>
                 {

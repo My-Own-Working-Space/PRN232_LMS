@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PRN232.LMS.API.Models;
+using PRN232.LMS.API.Models.Requests;
 using PRN232.LMS.Services;
 using PRN232.LMS.Services.Common;
 using PRN232.LMS.Services.Models;
@@ -69,10 +70,16 @@ namespace PRN232.LMS.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateSemester([FromBody] SemesterModel model)
+        public IActionResult CreateSemester([FromBody] CreateSemesterRequest request)
         {
             try
             {
+                var model = new SemesterModel
+                {
+                    SemesterName = request.SemesterName,
+                    StartDate = request.StartDate,
+                    EndDate = request.EndDate
+                };
                 var created = _semesterService.CreateSemester(model);
                 return CreatedAtAction(nameof(GetSemesterById), new { id = created.SemesterId }, new ApiResponse<object>
                 {

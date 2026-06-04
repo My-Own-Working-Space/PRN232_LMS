@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PRN232.LMS.API.Models;
+using PRN232.LMS.API.Models.Requests;
 using PRN232.LMS.Services;
 using PRN232.LMS.Services.Common;
 using PRN232.LMS.Services.Models;
@@ -69,10 +70,16 @@ namespace PRN232.LMS.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateStudent([FromBody] StudentModel model)
+        public IActionResult CreateStudent([FromBody] CreateStudentRequest request)
         {
             try
             {
+                var model = new StudentModel
+                {
+                    FullName = request.FullName,
+                    Email = request.Email,
+                    DateOfBirth = request.DateOfBirth
+                };
                 var created = _studentService.CreateStudent(model);
                 return CreatedAtAction(nameof(GetStudentById), new { id = created.Id }, new ApiResponse<object>
                 {
@@ -128,7 +135,7 @@ namespace PRN232.LMS.API.Controllers
         }
 
         [HttpPost("{id}/enrollments")]
-        public IActionResult CreateEnrollmentForStudent(int id, [FromBody] EnrollModel model)
+        public IActionResult CreateEnrollmentForStudent(int id, [FromBody] CreateEnrollmentRequest request)
         {
             try
             {
@@ -143,7 +150,13 @@ namespace PRN232.LMS.API.Controllers
                     });
                 }
 
-                model.StudentId = id;
+                var model = new EnrollModel
+                {
+                    StudentId = id,
+                    CourseId = request.CourseId,
+                    EnrollDate = DateTime.Now,
+                    Status = request.Status
+                };
                 var created = _enrollService.CreateEnrollment(model);
                 return Ok(new ApiResponse<object>
                 {

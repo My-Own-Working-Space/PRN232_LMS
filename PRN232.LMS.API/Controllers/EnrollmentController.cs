@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PRN232.LMS.API.Models;
+using PRN232.LMS.API.Models.Requests;
 using PRN232.LMS.Services;
 using PRN232.LMS.Services.Common;
 using PRN232.LMS.Services.Models;
@@ -67,10 +68,17 @@ namespace PRN232.LMS.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateEnrollment([FromBody] EnrollModel model)
+        public IActionResult CreateEnrollment([FromBody] CreateEnrollmentRequest request)
         {
             try
             {
+                var model = new EnrollModel
+                {
+                    StudentId = request.StudentId,
+                    CourseId = request.CourseId,
+                    EnrollDate = DateTime.Now,
+                    Status = request.Status
+                };
                 var created = _enrollService.CreateEnrollment(model);
                 return CreatedAtAction(nameof(GetEnrollmentById), new { id = created.EnrollmentId }, new ApiResponse<object>
                 {
