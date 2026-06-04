@@ -18,7 +18,7 @@ namespace PRN232.LMS.API.Controllers
             {
                 var student = _studentService.GetStudentById(id);
 
-                if (student == null)
+                if (student == null || student.Id == 0)
                 {
                     return NotFound(new ApiResponse<object>
                     {

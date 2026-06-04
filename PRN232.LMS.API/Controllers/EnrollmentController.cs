@@ -18,7 +18,7 @@ namespace PRN232.LMS.API.Controllers
             {
                 var enrollment = _enrollService.GetEnrollmentById(id);
 
-                if (enrollment == null)
+                if (enrollment == null || enrollment.EnrollmentId == 0)
                 {
                     return NotFound(new ApiResponse<object>
                     {
