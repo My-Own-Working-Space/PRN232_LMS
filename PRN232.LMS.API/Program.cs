@@ -9,6 +9,7 @@ using PRN232.LMS.API.Middlewares;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -149,6 +150,7 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<PRN232.LMS.Repositories.LMSDatabaseContext>();
+    context.Database.Migrate();
     if (!context.Users.Any(u => u.Username == "admin"))
     {
         context.Users.Add(new PRN232.LMS.Repositories.Models.User
