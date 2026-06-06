@@ -1,4 +1,5 @@
 using PRN232.LMS.Repositories.Interfaces;
+using PRN232.LMS.Services.Interfaces;
 using PRN232.LMS.Repositories.Models;
 using PRN232.LMS.Repositories.Extensions;
 using PRN232.LMS.Services.Common;
@@ -90,7 +91,6 @@ namespace PRN232.LMS.Services
 
         public CourseSubjectModel CreateCourseSubject(CourseSubjectModel model)
         {
-            // Business rule: verify if duplicate course-subject relation exists
             var exists = _courseSubjectRepository.GetCourseSubjects().Any(cs => cs.CourseId == model.CourseId && cs.SubjectId == model.SubjectId);
             if (exists)
             {

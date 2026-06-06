@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PRN232.LMS.API.Models;
 using PRN232.LMS.Services;
+using PRN232.LMS.Services.Interfaces;
 using PRN232.LMS.Services.Common;
 
 namespace PRN232.LMS.API.Controllers
@@ -9,7 +10,7 @@ namespace PRN232.LMS.API.Controllers
     [Route("api/grades")]
     public class GradeController(IGradeService _gradeService) : ControllerBase
     {
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}", Name = "GetGradeById")]
         public IActionResult GetGradeById(int id)
         {
             try

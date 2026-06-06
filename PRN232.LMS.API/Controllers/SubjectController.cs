@@ -2,16 +2,21 @@ using Microsoft.AspNetCore.Mvc;
 using PRN232.LMS.API.Models;
 using PRN232.LMS.API.Models.Requests;
 using PRN232.LMS.Services;
+using PRN232.LMS.Services.Interfaces;
 using PRN232.LMS.Services.Common;
 using PRN232.LMS.Services.Models;
+using FluentValidation;
 
 namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
+    [Route("api/v{version:apiVersion}/subjects")]
     [Route("api/subjects")]
+    [Asp.Versioning.ApiVersion("1.0")]
     public class SubjectController(ISubjectService _subjectService) : ControllerBase
     {
-        [HttpGet("{id}")]
+        [HttpGet("/api/v{version:apiVersion}/subjects/{id:int}", Name = "GetSubjectById")]
+        [HttpGet("/api/subjects/{id:int}")]
         public IActionResult GetSubjectById(int id)
         {
             try
@@ -47,8 +52,12 @@ namespace PRN232.LMS.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetSubjects([FromQuery] QueryParameters queryParams)
+        public async Task<IActionResult> GetSubjects([FromQuery] QueryParameters queryParams, [FromHeader(Name = "X-Request-Id")] string? requestId)
         {
+            if (!string.IsNullOrEmpty(requestId))
+            {
+                Response.Headers.Append("X-Request-Id", requestId);
+            }
             var result = await _subjectService.GetSubjectsAsync(queryParams);
 
             if (result == null)
@@ -70,8 +79,19 @@ namespace PRN232.LMS.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateSubject([FromBody] CreateSubjectRequest request)
+        public IActionResult CreateSubject([FromBody] CreateSubjectRequest request, [FromServices] IValidator<CreateSubjectRequest> validator)
         {
+            var validationResult = validator.Validate(request);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Validation failed",
+                    Errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList()
+                });
+            }
+
             try
             {
                 var model = new SubjectModel

@@ -2,16 +2,20 @@ using Microsoft.AspNetCore.Mvc;
 using PRN232.LMS.API.Models;
 using PRN232.LMS.API.Models.Requests;
 using PRN232.LMS.Services;
+using PRN232.LMS.Services.Interfaces;
 using PRN232.LMS.Services.Common;
 using PRN232.LMS.Services.Models;
 
 namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
+    [Route("api/v{version:apiVersion}/semesters")]
     [Route("api/semesters")]
+    [Asp.Versioning.ApiVersion("1.0")]
     public class SemesterController(ISemesterService _semesterService) : ControllerBase
     {
-        [HttpGet("{id}")]
+        [HttpGet("/api/v{version:apiVersion}/semesters/{id:int}", Name = "GetSemesterById")]
+        [HttpGet("/api/semesters/{id:int}")]
         public IActionResult GetSemesterById(int id)
         {
             try
@@ -70,6 +74,7 @@ namespace PRN232.LMS.API.Controllers
         }
 
         [HttpPost]
+        [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
         public IActionResult CreateSemester([FromBody] CreateSemesterRequest request)
         {
             try

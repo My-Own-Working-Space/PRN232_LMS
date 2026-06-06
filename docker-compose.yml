@@ -31,6 +31,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ConnectionStrings__DefaultConnection=Server=db,1433;Database=${DB_NAME};User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=true
+      - JwtSettings__SecretKey=${JWT_SECRET_KEY}
     depends_on:
       db:
         condition: service_healthy

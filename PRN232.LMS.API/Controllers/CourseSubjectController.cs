@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PRN232.LMS.API.Models;
 using PRN232.LMS.Services;
+using PRN232.LMS.Services.Interfaces;
 using PRN232.LMS.Services.Common;
 
 namespace PRN232.LMS.API.Controllers
@@ -9,7 +10,7 @@ namespace PRN232.LMS.API.Controllers
     [Route("api/courseSubjects")]
     public class CourseSubjectController(ICourseSubjectService _courseSubjectService) : ControllerBase
     {
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}", Name = "GetCourseSubjectById")]
         public IActionResult GetCourseSubjectById(int id)
         {
             try

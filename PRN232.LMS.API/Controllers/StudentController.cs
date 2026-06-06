@@ -2,16 +2,21 @@ using Microsoft.AspNetCore.Mvc;
 using PRN232.LMS.API.Models;
 using PRN232.LMS.API.Models.Requests;
 using PRN232.LMS.Services;
+using PRN232.LMS.Services.Interfaces;
 using PRN232.LMS.Services.Common;
 using PRN232.LMS.Services.Models;
 
 namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
+    [Route("api/v{version:apiVersion}/students")]
     [Route("api/students")]
+    [Asp.Versioning.ApiVersion("1.0")]
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class StudentController(IStudentService _studentService, IEnrollService _enrollService) : ControllerBase
     {
-        [HttpGet("{id}")]
+        [HttpGet("/api/v{version:apiVersion}/students/{id:int}", Name = "GetStudentById")]
+        [HttpGet("/api/students/{id:int}")]
         public IActionResult GetStudentById(int id)
         {
             try
@@ -99,7 +104,7 @@ namespace PRN232.LMS.API.Controllers
             }
         }
 
-        [HttpGet("{id}/enrollments")]
+        [HttpGet("{id:int}/enrollments")]
         public async Task<IActionResult> GetEnrollmentsByStudentId(int id, [FromQuery] QueryParameters queryParams)
         {
             try
@@ -134,7 +139,7 @@ namespace PRN232.LMS.API.Controllers
             }
         }
 
-        [HttpPost("{id}/enrollments")]
+        [HttpPost("{id:int}/enrollments")]
         public IActionResult CreateEnrollmentForStudent(int id, [FromBody] CreateEnrollmentRequest request)
         {
             try

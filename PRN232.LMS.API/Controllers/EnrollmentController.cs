@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using PRN232.LMS.API.Models;
 using PRN232.LMS.API.Models.Requests;
 using PRN232.LMS.Services;
+using PRN232.LMS.Services.Interfaces;
 using PRN232.LMS.Services.Common;
 using PRN232.LMS.Services.Models;
 
@@ -11,7 +12,7 @@ namespace PRN232.LMS.API.Controllers
     [Route("api/enrollments")]
     public class EnrollmentController(IEnrollService _enrollService) : Controller
     {
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}", Name = "GetEnrollmentById")]
         public IActionResult GetEnrollmentById(int id)
         {
             try

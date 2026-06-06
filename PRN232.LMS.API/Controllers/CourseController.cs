@@ -2,16 +2,19 @@ using Microsoft.AspNetCore.Mvc;
 using PRN232.LMS.API.Models;
 using PRN232.LMS.API.Models.Requests;
 using PRN232.LMS.Services;
+using PRN232.LMS.Services.Interfaces;
 using PRN232.LMS.Services.Common;
 using PRN232.LMS.Services.Models;
 
 namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
+    [Route("api/v{version:apiVersion}/courses")]
     [Route("api/courses")]
+    [Asp.Versioning.ApiVersion("1.0")]
     public class CourseController(ICourseService _courseService, IEnrollService _enrollService, ICourseSubjectService _courseSubjectService) : ControllerBase
     {
-        [HttpGet("{id}/enrollments")]
+        [HttpGet("{id:int}/enrollments")]
         public async Task<IActionResult> GetEnrollmentsByCourseId(int id, [FromQuery] QueryParameters queryParams)
         {
             try
@@ -58,7 +61,7 @@ namespace PRN232.LMS.API.Controllers
             }
         }
 
-        [HttpPost("{id}/enrollments")]
+        [HttpPost("{id:int}/enrollments")]
         public IActionResult CreateEnrollmentForCourse(int id, [FromBody] CreateEnrollmentRequest request)
         {
             try
@@ -100,7 +103,8 @@ namespace PRN232.LMS.API.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("/api/v{version:apiVersion}/courses/{id:int}", Name = "GetCourseById")]
+        [HttpGet("/api/courses/{id:int}")]
         public IActionResult GetCourseById(int id)
         {
             try
@@ -252,7 +256,7 @@ namespace PRN232.LMS.API.Controllers
             }
         }
 
-        [HttpGet("{id}/subjects")]
+        [HttpGet("{id:int}/subjects")]
         public async Task<IActionResult> GetSubjectsByCourseId(int id, [FromQuery] QueryParameters queryParams)
         {
             try
@@ -287,7 +291,7 @@ namespace PRN232.LMS.API.Controllers
             }
         }
 
-        [HttpPost("{id}/subjects")]
+        [HttpPost("{id:int}/subjects")]
         public IActionResult CreateCourseSubjectForCourse(int id, [FromBody] CreateCourseSubjectRequest request)
         {
             try

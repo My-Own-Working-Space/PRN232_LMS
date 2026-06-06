@@ -1,4 +1,5 @@
 using PRN232.LMS.Repositories.Interfaces;
+using PRN232.LMS.Services.Interfaces;
 using PRN232.LMS.Repositories.Models;
 using PRN232.LMS.Repositories.Extensions;
 using PRN232.LMS.Services.Common;
@@ -37,7 +38,16 @@ namespace PRN232.LMS.Services
             var (enrollments, totalCount) = await _enrollmentRepository
                 .GetCollectionAsync(queryParams.Expand, queryParams.Sort, queryParams.Page, queryParams.Size, searchFilter);
 
-            var shaped = enrollments.ShapeData(queryParams.Fields);
+            var mapped = enrollments.Select(e => new EnrollModel
+            {
+                EnrollmentId = e.EnrollmentId,
+                CourseId = e.CourseId,
+                StudentId = e.StudentId,
+                EnrollDate = e.EnrollDate,
+                Status = e.Status
+            }).ToList();
+
+            var shaped = mapped.ShapeData(queryParams.Fields);
 
             return new PagedResult<dynamic>
             {
@@ -63,7 +73,16 @@ namespace PRN232.LMS.Services
             var (enrollments, totalCount) = await _enrollmentRepository
                 .GetCollectionAsync(queryParams.Expand, queryParams.Sort, queryParams.Page, queryParams.Size, searchFilter);
 
-            var shaped = enrollments.ShapeData(queryParams.Fields);
+            var mapped = enrollments.Select(e => new EnrollModel
+            {
+                EnrollmentId = e.EnrollmentId,
+                CourseId = e.CourseId,
+                StudentId = e.StudentId,
+                EnrollDate = e.EnrollDate,
+                Status = e.Status
+            }).ToList();
+
+            var shaped = mapped.ShapeData(queryParams.Fields);
 
             return new PagedResult<dynamic>
             {
@@ -89,7 +108,16 @@ namespace PRN232.LMS.Services
             var (enrollments, totalCount) = await _enrollmentRepository
                 .GetCollectionAsync(queryParams.Expand, queryParams.Sort, queryParams.Page, queryParams.Size, searchFilter);
 
-            var shaped = enrollments.ShapeData(queryParams.Fields);
+            var mapped = enrollments.Select(e => new EnrollModel
+            {
+                EnrollmentId = e.EnrollmentId,
+                CourseId = e.CourseId,
+                StudentId = e.StudentId,
+                EnrollDate = e.EnrollDate,
+                Status = e.Status
+            }).ToList();
+
+            var shaped = mapped.ShapeData(queryParams.Fields);
 
             return new PagedResult<dynamic>
             {
@@ -106,7 +134,6 @@ namespace PRN232.LMS.Services
 
         public EnrollModel CreateEnrollment(EnrollModel model)
         {
-            // Check if enrollment already exists (StudentId + CourseId must be unique)
             var exists = _enrollmentRepository.GetEnrolls().Any(e => e.StudentId == model.StudentId && e.CourseId == model.CourseId);
             if (exists)
             {

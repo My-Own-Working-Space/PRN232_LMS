@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using PRN232.LMS.Services.Models;
 using PRN232.LMS.Services.Common;
 
-namespace PRN232.LMS.Services
+namespace PRN232.LMS.Services.Interfaces
 {
     public interface IStudentService
     {
