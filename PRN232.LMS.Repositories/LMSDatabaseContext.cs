@@ -143,6 +143,7 @@ public partial class LMSDatabaseContext : DbContext
             entity.HasIndex(e => e.Email, "IX_Student_Email");
 
             entity.HasIndex(e => e.Email, "UQ_Student_Email").IsUnique();
+            entity.HasIndex(e => e.StudentCode, "UQ_Student_Code").IsUnique();
 
             entity.Property(e => e.DateOfBirth).HasColumnType("datetime");
             entity.Property(e => e.Email)
@@ -152,6 +153,10 @@ public partial class LMSDatabaseContext : DbContext
             entity.Property(e => e.FullName)
                 .IsRequired()
                 .HasMaxLength(100);
+            entity.Property(e => e.StudentCode)
+                .IsRequired()
+                .HasMaxLength(20)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Subject>(entity =>

@@ -8,6 +8,7 @@ namespace PRN232.LMS.Repositories.Models;
 public partial class Student
 {
     public int StudentId { get; set; }
+    public string StudentCode { get; set; }
     
     public int? UserId { get; set; }
 

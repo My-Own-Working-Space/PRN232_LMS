@@ -49,6 +49,41 @@ namespace PRN232.LMS.API.Controllers
             }
         }
 
+        [HttpGet("code/{code}")]
+        public IActionResult GetStudentByCode(string code)
+        {
+            try
+            {
+                var student = _studentService.GetStudentByCode(code);
+
+                if (student == null || student.Id == 0)
+                {
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = $"Student with Code {code} does not exist.",
+                        Data = null
+                    });
+                }
+
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Request processed successfully",
+                    Data = student
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "An error occurred while processing the request",
+                    Errors = ex.Message
+                });
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetStudents([FromQuery] QueryParameters queryParams)
         {
@@ -79,6 +114,7 @@ namespace PRN232.LMS.API.Controllers
             {
                 var model = new StudentModel
                 {
+                    StudentCode = request.StudentCode,
                     FullName = request.FullName,
                     Email = request.Email,
                     DateOfBirth = request.DateOfBirth

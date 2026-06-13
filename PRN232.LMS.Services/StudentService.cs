@@ -15,6 +15,7 @@ namespace PRN232.LMS.Services
             List<StudentModel> studentModels = _studentRepository.GetStudents().Select(s => new StudentModel()
             {
                 Id = s.StudentId,
+                StudentCode = s.StudentCode,
                 FullName = s.FullName,
                 Email = s.Email,
                 DateOfBirth = s.DateOfBirth
@@ -29,6 +30,7 @@ namespace PRN232.LMS.Services
             StudentModel studentModel = new StudentModel()
             {
                 Id = student.StudentId,
+                StudentCode = student.StudentCode,
                 FullName = student.FullName,
                 Email = student.Email,
                 DateOfBirth = student.DateOfBirth
@@ -43,7 +45,8 @@ namespace PRN232.LMS.Services
             {
                 searchFilter = s =>
                     s.FullName.Contains(queryParams.Search) ||
-                    s.Email.Contains(queryParams.Search);
+                    s.Email.Contains(queryParams.Search) ||
+                    s.StudentCode.Contains(queryParams.Search);
             }
 
             var (students, totalCount) = await _studentRepository
@@ -52,6 +55,7 @@ namespace PRN232.LMS.Services
             var businessModels = students.Select(s => new StudentModel
             {
                 Id = s.StudentId,
+                StudentCode = s.StudentCode,
                 FullName = s.FullName,
                 Email = s.Email,
                 DateOfBirth = s.DateOfBirth
@@ -81,8 +85,16 @@ namespace PRN232.LMS.Services
                 throw new InvalidOperationException($"Email '{model.Email}' is already registered.");
             }
 
+            // Check if StudentCode already exists in the database
+            var codeExists = _studentRepository.GetStudents().Any(s => s.StudentCode.Equals(model.StudentCode, StringComparison.OrdinalIgnoreCase));
+            if (codeExists)
+            {
+                throw new InvalidOperationException($"Student Code '{model.StudentCode}' is already registered.");
+            }
+
             var student = new Student
             {
+                StudentCode = model.StudentCode,
                 FullName = model.FullName,
                 Email = model.Email,
                 DateOfBirth = model.DateOfBirth
@@ -92,6 +104,21 @@ namespace PRN232.LMS.Services
 
             model.Id = student.StudentId;
             return model;
+        }
+
+        public StudentModel GetStudentByCode(string code)
+        {
+            var student = _studentRepository.GetStudents()
+                .FirstOrDefault(s => s.StudentCode.Equals(code, StringComparison.OrdinalIgnoreCase));
+            if (student == null) return null;
+            return new StudentModel
+            {
+                Id = student.StudentId,
+                StudentCode = student.StudentCode,
+                FullName = student.FullName,
+                Email = student.Email,
+                DateOfBirth = student.DateOfBirth
+            };
         }
     }
 }

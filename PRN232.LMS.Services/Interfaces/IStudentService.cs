@@ -12,6 +12,7 @@ namespace PRN232.LMS.Services.Interfaces
     {
         public List<StudentModel> GetStudents();
         public StudentModel GetStudentById(int id);
+        public StudentModel GetStudentByCode(string code);
         Task<PagedResult<dynamic>> GetStudentsAsync(QueryParameters queryParams);
         public StudentModel CreateStudent(StudentModel model);
     }
