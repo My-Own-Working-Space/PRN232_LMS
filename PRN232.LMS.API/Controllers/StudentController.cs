@@ -10,13 +10,11 @@ namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/students")]
-    [Route("api/students")]
     [Asp.Versioning.ApiVersion("1.0")]
     [Microsoft.AspNetCore.Authorization.Authorize]
     public class StudentController(IStudentService _studentService, IEnrollService _enrollService) : ControllerBase
     {
-        [HttpGet("/api/v{version:apiVersion}/students/{id:int}", Name = "GetStudentById")]
-        [HttpGet("/api/students/{id:int}")]
+        [HttpGet("{id:int}", Name = "GetStudentById")]
         public IActionResult GetStudentById(int id)
         {
             try

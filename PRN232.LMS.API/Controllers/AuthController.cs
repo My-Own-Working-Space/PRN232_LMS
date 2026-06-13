@@ -9,7 +9,8 @@ namespace PRN232.LMS.API.Controllers
     
     [ApiController]
     [AllowAnonymous]
-    [Route("api/auth")]
+    [Route("api/v{version:apiVersion}/auth")]
+    [Asp.Versioning.ApiVersion("1.0")]
     public class AuthController(IAuthService authService) : ControllerBase
     {
         [HttpPost("login")]

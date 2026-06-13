@@ -10,7 +10,6 @@ namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/courses")]
-    [Route("api/courses")]
     [Asp.Versioning.ApiVersion("1.0")]
     public class CourseController(ICourseService _courseService, IEnrollService _enrollService, ICourseSubjectService _courseSubjectService) : ControllerBase
     {
@@ -103,8 +102,7 @@ namespace PRN232.LMS.API.Controllers
             }
         }
 
-        [HttpGet("/api/v{version:apiVersion}/courses/{id:int}", Name = "GetCourseById")]
-        [HttpGet("/api/courses/{id:int}")]
+        [HttpGet("{id:int}", Name = "GetCourseById")]
         public IActionResult GetCourseById(int id)
         {
             try
@@ -191,7 +189,7 @@ namespace PRN232.LMS.API.Controllers
             }
         }
 
-        [HttpPost("~/api/semesters/{semesterId}/courses")]
+        [HttpPost("~/api/v{version:apiVersion}/semesters/{semesterId}/courses")]
         public IActionResult CreateCourseForSemester(int semesterId, [FromBody] CreateCourseRequest request)
         {
             try
@@ -221,7 +219,7 @@ namespace PRN232.LMS.API.Controllers
             }
         }
 
-        [HttpGet("~/api/semesters/{semesterId}/courses")]
+        [HttpGet("~/api/v{version:apiVersion}/semesters/{semesterId}/courses")]
         public async Task<IActionResult> GetCoursesBySemesterId(int semesterId, [FromQuery] QueryParameters queryParams)
         {
             try

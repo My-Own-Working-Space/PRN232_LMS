@@ -11,12 +11,10 @@ namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/subjects")]
-    [Route("api/subjects")]
     [Asp.Versioning.ApiVersion("1.0")]
     public class SubjectController(ISubjectService _subjectService) : ControllerBase
     {
-        [HttpGet("/api/v{version:apiVersion}/subjects/{id:int}", Name = "GetSubjectById")]
-        [HttpGet("/api/subjects/{id:int}")]
+        [HttpGet("{id:int}", Name = "GetSubjectById")]
         public IActionResult GetSubjectById(int id)
         {
             try

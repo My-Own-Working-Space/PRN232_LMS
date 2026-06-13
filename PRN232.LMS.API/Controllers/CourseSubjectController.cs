@@ -7,7 +7,8 @@ using PRN232.LMS.Services.Common;
 namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
-    [Route("api/courseSubjects")]
+    [Route("api/v{version:apiVersion}/courseSubjects")]
+    [Asp.Versioning.ApiVersion("1.0")]
     public class CourseSubjectController(ICourseSubjectService _courseSubjectService) : ControllerBase
     {
         [HttpGet("{id:int}", Name = "GetCourseSubjectById")]

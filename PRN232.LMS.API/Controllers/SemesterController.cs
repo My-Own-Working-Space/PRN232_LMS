@@ -10,12 +10,10 @@ namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/semesters")]
-    [Route("api/semesters")]
     [Asp.Versioning.ApiVersion("1.0")]
     public class SemesterController(ISemesterService _semesterService) : ControllerBase
     {
-        [HttpGet("/api/v{version:apiVersion}/semesters/{id:int}", Name = "GetSemesterById")]
-        [HttpGet("/api/semesters/{id:int}")]
+        [HttpGet("{id:int}", Name = "GetSemesterById")]
         public IActionResult GetSemesterById(int id)
         {
             try

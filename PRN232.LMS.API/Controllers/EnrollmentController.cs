@@ -9,7 +9,8 @@ using PRN232.LMS.Services.Models;
 namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
-    [Route("api/enrollments")]
+    [Route("api/v{version:apiVersion}/enrollments")]
+    [Asp.Versioning.ApiVersion("1.0")]
     public class EnrollmentController(IEnrollService _enrollService) : Controller
     {
         [HttpGet("{id:int}", Name = "GetEnrollmentById")]

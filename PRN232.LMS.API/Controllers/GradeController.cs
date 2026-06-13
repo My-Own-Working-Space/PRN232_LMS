@@ -7,7 +7,8 @@ using PRN232.LMS.Services.Common;
 namespace PRN232.LMS.API.Controllers
 {
     [ApiController]
-    [Route("api/grades")]
+    [Route("api/v{version:apiVersion}/grades")]
+    [Asp.Versioning.ApiVersion("1.0")]
     public class GradeController(IGradeService _gradeService) : ControllerBase
     {
         [HttpGet("{id:int}", Name = "GetGradeById")]
