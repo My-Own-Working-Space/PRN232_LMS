@@ -16,6 +16,13 @@ namespace PRN232.LMS.API.Models.Requests
 
         [Required(ErrorMessage = "DateOfBirth is required")]
         public DateTime DateOfBirth { get; set; }
+
+        [Phone(ErrorMessage = "Invalid Phone Number")]
+        [RegularExpression(@"^\d{10,11}$", ErrorMessage = "Phone number must be between 10 and 11 digits")]
+        public string? Phone { get; set; }
+
+        [FptuCode(ErrorMessage = "StudentCode must follow FPTU style (e.g., SE19886, CE18793)")]
+        public string? StudentCode { get; set; }
     }
 
     public class CreateCourseRequest

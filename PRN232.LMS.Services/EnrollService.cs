@@ -97,6 +97,41 @@ namespace PRN232.LMS.Services
             };
         }
 
+        public async Task<PagedResult<dynamic>> GetStudentsByCourseIdAsync(int courseId, QueryParameters queryParams)
+        {
+            Expression<Func<Enrollment, bool>> searchFilter = e => e.CourseId == courseId;
+            if (!string.IsNullOrWhiteSpace(queryParams.Search))
+            {
+                searchFilter = e => e.CourseId == courseId && 
+                    (e.Student.FullName.Contains(queryParams.Search) || e.Student.Email.Contains(queryParams.Search));
+            }
+
+            var (enrollments, totalCount) = await _enrollmentRepository
+                .GetCollectionAsync("Student", queryParams.Sort, queryParams.Page, queryParams.Size, searchFilter);
+
+            var students = enrollments.Select(e => new StudentModel
+            {
+                Id = e.Student.StudentId,
+                FullName = e.Student.FullName,
+                Email = e.Student.Email,
+                DateOfBirth = e.Student.DateOfBirth
+            }).ToList();
+
+            var shaped = students.ShapeData(queryParams.Fields);
+
+            return new PagedResult<dynamic>
+            {
+                Items = shaped,
+                Pagination = new PaginationMetadata
+                {
+                    Page = queryParams.Page,
+                    PageSize = queryParams.Size,
+                    TotalItems = totalCount,
+                    TotalPages = (int)Math.Ceiling(totalCount / (double)queryParams.Size)
+                }
+            };
+        }
+
         public async Task<PagedResult<dynamic>> GetEnrollmentsByStudentIdAsync(int studentId, QueryParameters queryParams)
         {
             Expression<Func<Enrollment, bool>> searchFilter = e => e.StudentId == studentId;

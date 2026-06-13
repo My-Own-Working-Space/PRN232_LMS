@@ -330,5 +330,40 @@ namespace PRN232.LMS.API.Controllers
                 });
             }
         }
+
+        [HttpGet("{courseId:int}/students")]
+        public async Task<IActionResult> GetStudentsByCourseId(int courseId, [FromQuery] QueryParameters queryParams)
+        {
+            try
+            {
+                var course = _courseService.GetCourseById(courseId);
+                if (course == null || course.CourseId == 0)
+                {
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = $"Course with ID {courseId} does not exist.",
+                        Data = null
+                    });
+                }
+
+                var result = await _enrollService.GetStudentsByCourseIdAsync(courseId, queryParams);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Students retrieved successfully",
+                    Data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "An error occurred while retrieving students",
+                    Errors = ex.Message
+                });
+            }
+        }
     }
 }
