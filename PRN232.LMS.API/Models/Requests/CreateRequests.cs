@@ -21,7 +21,7 @@ namespace PRN232.LMS.API.Models.Requests
         [RegularExpression(@"^\d{10,11}$", ErrorMessage = "Phone number must be between 10 and 11 digits")]
         public string? Phone { get; set; }
 
-        [FptuCode(ErrorMessage = "StudentCode must follow FPTU style (e.g., SE19886, CE18793)")]
+        [FptuCode(ErrorMessage = "StudentCode must follow FPTU style (e.g., SE193418)")]
         public string? StudentCode { get; set; }
     }
 
