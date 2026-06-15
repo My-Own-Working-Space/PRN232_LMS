@@ -48,7 +48,8 @@ builder.Services.AddApiVersioning(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
-    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "LMS API", Version = "v1" });
+    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "LMS API v1", Version = "v1" });
+    opt.SwaggerDoc("v2", new OpenApiInfo { Title = "LMS API v2", Version = "v2" });
     opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -133,7 +134,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "LMS API v1");
+        options.SwaggerEndpoint("/swagger/v2/swagger.json", "LMS API v2");
+    });
 }
 
 app.UseHttpsRedirection();

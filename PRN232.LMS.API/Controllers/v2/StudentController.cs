@@ -6,15 +6,15 @@ using PRN232.LMS.Services.Interfaces;
 using PRN232.LMS.Services.Common;
 using PRN232.LMS.Services.Models;
 
-namespace PRN232.LMS.API.Controllers
+namespace PRN232.LMS.API.Controllers.v2
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/students")]
-    [Asp.Versioning.ApiVersion("1.0")]
+    [Asp.Versioning.ApiVersion("2.0")]
     [Microsoft.AspNetCore.Authorization.Authorize]
     public class StudentController(IStudentService _studentService, IEnrollService _enrollService) : ControllerBase
     {
-        [HttpGet("{id:int}", Name = "GetStudentByIdV1")]
+        [HttpGet("{id:int}", Name = "GetStudentByIdV2")]
         public IActionResult GetStudentById(int id)
         {
             try
@@ -27,6 +27,41 @@ namespace PRN232.LMS.API.Controllers
                     {
                         Success = false,
                         Message = $"Student with ID {id} does not exist.",
+                        Data = null
+                    });
+                }
+
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Request processed successfully",
+                    Data = student
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "An error occurred while processing the request",
+                    Errors = ex.Message
+                });
+            }
+        }
+
+        [HttpGet("code/{code}")]
+        public IActionResult GetStudentByCode(string code)
+        {
+            try
+            {
+                var student = _studentService.GetStudentByCode(code);
+
+                if (student == null || student.Id == 0)
+                {
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = $"Student with Code {code} does not exist.",
                         Data = null
                     });
                 }
